@@ -62,19 +62,40 @@ class DouguoSpiderSpider(scrapy.Spider):
 
         item['author'] = response.xpath(".//div[@class='auth']/h4/a/text()").extract()[0].strip()
 
+# ---------------------------------------------------------------------------------------------------
         recipeIngredient = ""
         for pair in response.xpath(".//table//tr[not(@class='mtim')]/td"):
-            if len(pair.xpath("./span[1]/a")) != 0:
-                ing1 = pair.xpath("./span[1]/a/text()").extract()[0].strip()
-            else:
-                ing1 = pair.xpath("./span[1]/label/text()").extract()[0].strip()
-            if len(pair.xpath("./span[2]")) == 1:           # TODO
-                ing2 = pair.xpath("./span[2]/text()").extract()[0].strip()
-            else:
-                ing2 = 'null'
-            recipeIngredient += str(ing1) + " &: " + str(ing2) + "$"
+            if len(pair.xpath("./span")) != 0:
+                if len(pair.xpath("./span[1]/a")) != 0:
+                    ing1 = pair.xpath("./span[1]/a/text()").extract()[0].strip()
+                    print("---------------test1----------------")
+                    print(pair.xpath("./span[1]/a/text()").extract())
+                    print("第一个")
+                    print("---------------test1----------------")
+                else:
+                    ing1 = pair.xpath("./span[1]/label/text()").extract()[0].strip()
+                    print("---------------test1----------------")
+                    print(pair.xpath("./span[1]/label/text()").extract())
+                    print("第二个")
+                    print("---------------test1----------------")
+
+                if len(pair.xpath("./span[2]/text()").extract()) != 0:
+                    ing2 = pair.xpath("./span[2]/text()").extract()[0].strip()
+                    print("---------------test2----------------")
+                    print(pair.xpath("./span[2]/text()").extract())
+                    print("第一个")
+                    print("---------------test2----------------")
+                else:
+                    ing2 = 'null'
+                    print("---------------test2----------------")
+                    print('null')
+                    print("第二个")
+                    print("---------------test2----------------")
+                recipeIngredient += str(ing1) + " &: " + str(ing2) + "$"
+
         item['recipeIngredient'] = recipeIngredient
 
+# ---------------------------------------------------------------------------------------------------
 
         difficulty = "无"
         timeAssume = "无"

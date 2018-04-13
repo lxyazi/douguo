@@ -9,29 +9,29 @@ import scrapy
 
 
 class DouguoItem(scrapy.Item):
-    # 浏览综述
+    # 浏览综述 1
     peopleNumber = scrapy.Field()
-    # 收藏人数
+    # 收藏人数 1
     collectionNumber = scrapy.Field()
-    # 描述
+    # 描述 1
     description = scrapy.Field()
-    # 用料
+    # 用料 1
     recipeIngredient = scrapy.Field()
     # 做法步骤
     step = scrapy.Field()
-    # 小贴士
+    # 小贴士 1
     tip = scrapy.Field()
-    # URL
+    # URL 1
     href = scrapy.Field()
-    # 菜名
+    # 菜名 1
     title = scrapy.Field()
-    # 分类信息
+    # 分类信息 1
     typeTitle = scrapy.Field()
-    # 难度
+    # 难度 1
     difficulty = scrapy.Field()
-    # 时间
+    # 时间 1
     timeAssume = scrapy.Field()
-    # 用户名称
+    # 用户名称 1
     author = scrapy.Field()
 
 class DouguoTypeItem(scrapy.Item):

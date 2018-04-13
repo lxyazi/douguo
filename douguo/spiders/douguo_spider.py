@@ -28,7 +28,7 @@ class DouguoSpiderSpider(scrapy.Spider):
         nodeList = response.xpath(".//div[@class='cp_box']")
         for node in nodeList:
             url = node.xpath("./a/@href").extract()[0].strip()
-            yield scrapy.Request(url, meta={"catesList": catesList, "url" : url}, callback=self.itemParse)
+            yield scrapy.Request(url, meta={"catesList": catesList, "url": url}, callback=self.itemParse)
         if len(response.xpath(".//div[@class='pagination']/span/a[text()='下一页']/@href")) != 0:
             url = response.xpath(".//div[@class='pagination']/span/a[text()='下一页']/@href").extract()[0].strip()
             yield scrapy.Request(url, meta={'catesList': response.meta['catesList']}, callback=self.listParse)
@@ -60,15 +60,43 @@ class DouguoSpiderSpider(scrapy.Spider):
 
         item['href'] = response.meta['url']
 
-        item['author'] = response.xpath(".//div[@class='auth']//a[1]/text()").extract()[0].strip()
+        item['author'] = response.xpath(".//div[@class='auth']/h4/a/text()").extract()[0].strip()
 
-        # recipeIngredient = ""
-        # for pair in response.xpath(".//div[@class='retew r3 pb25 mb20']//table//td"):
-        #     if len(pair.xpath(".//span")) != 0:
-        #         ing1 = pair.xpath("./span[1]/a/text()").extract()[0].strip()
-        #         ing2 = pair.xpath("./span[2]/text()").extract()[0].strip()
-        #         recipeIngredient += str(ing1) + str(ing2)
-        # item['recipeIngredient'] = recipeIngredient
+        recipeIngredient = ""
+        for pair in response.xpath(".//table//tr[not(@class='mtim')]/td"):
+            if len(pair.xpath("./span[1]/a")) != 0:
+                ing1 = pair.xpath("./span[1]/a/text()").extract()[0].strip()
+            else:
+                ing1 = pair.xpath("./span[1]/label/text()").extract()[0].strip()
+            if len(pair.xpath("./span[2]")) == 1:           # TODO
+                ing2 = pair.xpath("./span[2]/text()").extract()[0].strip()
+            else:
+                ing2 = 'null'
+            recipeIngredient += str(ing1) + " &: " + str(ing2) + "$"
+        item['recipeIngredient'] = recipeIngredient
 
+
+        difficulty = "无"
+        timeAssume = "无"
+        diffAndTime = response.xpath(".//table//tr[1]/td/span/text()").extract()
+        for value in diffAndTime:
+            if value == '难度：':
+                difficulty = response.xpath(".//table//tr[1]/td[1]/text()").extract()[0].strip()
+            if value == '时间：':
+                timeAssume = response.xpath(".//table//tr[1]/td[2]/text()").extract()[0].strip()
+        if len(response.xpath(".//table//tr[1]/td/span")) == 2:
+            difficulty = \
+                response.xpath(".//table//tr[@class='mtim']/td/text()").extract()[0].strip()
+            timeAssume = \
+                response.xpath(".//table//tr[@class='mtim']/td/text()").extract()[2].strip()
+        item['difficulty'] = difficulty
+        item['timeAssume'] = timeAssume
+
+        steps = response.xpath(
+            ".//div[@class='step clearfix']/div[@class='stepcont mll libdm pvl clearfix']/p/text()").extract()
+        step = " * "
+        for value in steps:
+            step += value + " * "
+        item['step'] = step
 
         yield item

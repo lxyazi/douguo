@@ -43,3 +43,17 @@ class DouguoTypeItem(scrapy.Item):
 
     # 三级分类
     catesListHref = scrapy.Field()
+
+class DouguoAuthorItem(scrapy.Item):
+    # 作者ID
+    authorName = scrapy.Field()
+    # 作者url
+    authorUrl = scrapy.Field()
+    # 作者地理位置
+    authorLocation = scrapy.Field()
+    # # 作者关注的人数
+    # numOfFollow = scrapy.Field()
+    # # 作者被关注的人数
+    # numOfFollowed = scrapy.Field()
+    # # 作者发布的菜谱
+    # numOfRecipes = scrapy.Field()

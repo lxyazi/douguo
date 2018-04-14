@@ -2,6 +2,7 @@
 import scrapy
 from douguo.items import DouguoTypeItem
 from douguo.items import DouguoItem
+from douguo.items import DouguoAuthorItem
 
 
 class DouguoSpiderSpider(scrapy.Spider):
@@ -62,40 +63,27 @@ class DouguoSpiderSpider(scrapy.Spider):
 
         item['author'] = response.xpath(".//div[@class='auth']/h4/a/text()").extract()[0].strip()
 
-# ---------------------------------------------------------------------------------------------------
+        author_url = response.xpath(".//div[@class='auth']/h4/a/@href").extract()[0].strip()
+        yield scrapy.Request(author_url, meta={'url': author_url, 'author': item['author']}, callback=self.authorParse)
+
+        # ---------------------------------------------------------------------------------------------------
         recipeIngredient = ""
         for pair in response.xpath(".//table//tr[not(@class='mtim')]/td"):
             if len(pair.xpath("./span")) != 0:
                 if len(pair.xpath("./span[1]/a")) != 0:
                     ing1 = pair.xpath("./span[1]/a/text()").extract()[0].strip()
-                    print("---------------test1----------------")
-                    print(pair.xpath("./span[1]/a/text()").extract())
-                    print("第一个")
-                    print("---------------test1----------------")
                 else:
                     ing1 = pair.xpath("./span[1]/label/text()").extract()[0].strip()
-                    print("---------------test1----------------")
-                    print(pair.xpath("./span[1]/label/text()").extract())
-                    print("第二个")
-                    print("---------------test1----------------")
 
                 if len(pair.xpath("./span[2]/text()").extract()) != 0:
                     ing2 = pair.xpath("./span[2]/text()").extract()[0].strip()
-                    print("---------------test2----------------")
-                    print(pair.xpath("./span[2]/text()").extract())
-                    print("第一个")
-                    print("---------------test2----------------")
                 else:
                     ing2 = 'null'
-                    print("---------------test2----------------")
-                    print('null')
-                    print("第二个")
-                    print("---------------test2----------------")
                 recipeIngredient += str(ing1) + " &: " + str(ing2) + "$"
 
         item['recipeIngredient'] = recipeIngredient
 
-# ---------------------------------------------------------------------------------------------------
+        # ---------------------------------------------------------------------------------------------------
 
         difficulty = "无"
         timeAssume = "无"
@@ -119,5 +107,14 @@ class DouguoSpiderSpider(scrapy.Spider):
         for value in steps:
             step += value + " * "
         item['step'] = step
+
+        yield item
+
+    def authorParse(self, response):
+        item = DouguoAuthorItem()
+        item['authorUrl'] = response.meta['url']
+        item['authorName'] = response.meta['author']
+        item['authorLocation'] = response.xpath(".//div[@class='clearfix']/span[@class='fcc']/text()").extract()[
+            0]
 
         yield item

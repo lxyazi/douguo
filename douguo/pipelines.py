@@ -14,6 +14,9 @@ class DouguoPipeline(object):
         self.fileType = open("fileType.json", "w")
         self.fileItem = open("fileItem.json", "w")
         self.fileAuthor = open("fileAuthor.json", "w")
+        self.fileType.write('[')
+        self.fileItem.write('[')
+        self.fileAuthor.write('[')
 
     def process_item(self, item, spider):
         if type(item) == DouguoTypeItem:
@@ -31,6 +34,9 @@ class DouguoPipeline(object):
         return item
 
     def closs_spidr(self, spider):
+        self.fileType.write(']')
+        self.fileItem.write(']')
+        self.fileAuthor.write(']')
         self.fileType.close()
         self.fileItem.close()
         self.fileAuthor.close()

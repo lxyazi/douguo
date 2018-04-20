@@ -33,6 +33,12 @@ class DouguoItem(scrapy.Item):
     timeAssume = scrapy.Field()
     # 用户名称 1
     author = scrapy.Field()
+    # # 评论数量
+    # numOfComments = scrapy.Field()
+    # # 评论作者s
+    # authorOfComments = scrapy.Field()
+
+
 
 class DouguoTypeItem(scrapy.Item):
     # 一级分类
@@ -51,6 +57,11 @@ class DouguoAuthorItem(scrapy.Item):
     authorUrl = scrapy.Field()
     # 作者地理位置
     authorLocation = scrapy.Field()
+    # 作者收集的菜的数量
+    authorCollectionNumber = scrapy.Field()
+    # 作者收藏的菜
+    authorCollection = scrapy.Field()
+
     # # 作者关注的人数
     # numOfFollow = scrapy.Field()
     # # 作者被关注的人数

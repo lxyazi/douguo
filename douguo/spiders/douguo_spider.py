@@ -7,7 +7,6 @@ from douguo.items import DouguoAuthorItem
 
 class DouguoSpiderSpider(scrapy.Spider):
     name = 'douguo_spider'
-    allowed_domains = ['douguo.com']
     start_urls = ['http://www.douguo.com/caipu/fenlei']
 
     def parse(self, response):
@@ -64,17 +63,18 @@ class DouguoSpiderSpider(scrapy.Spider):
             item['tip'] = "无"
 
         # 该道菜的url
-        item['href'] = response.meta['url']
+
+        item['href'] = response.meta['url'].split('/')[4][0:-5]
 
         # 用户站内ID的爬取
         item['author'] = response.xpath(".//div[@class='auth']/h4/a/text()").extract()[0].strip()
 
         # 用户主页的爬取及收藏页面的跳转
-        author_url = response.xpath(".//div[@class='auth']/h4/a/@href").extract()[0].strip()
-        author_url_collection = author_url.replace(".html", "/collect")
-        yield scrapy.Request(author_url_collection,
-                             meta={'url': author_url, 'author': item['author'], 'urlCollection': author_url_collection},
-                             callback=self.authorParse)
+        authorUrl = response.xpath(".//div[@class='auth']/h4/a/@href").extract()[0].strip()
+        authorUrlCollection = authorUrl.replace(".html", "/collect")
+        yield scrapy.Request(authorUrl,
+                             meta={'url': authorUrl, 'author': item['author'], 'urlCollection': authorUrlCollection},
+                             callback=self.authorMainParse)
 
         # ----------------------爬取菜的用料--------------------------------------
         recipeIngredient = ""
@@ -120,29 +120,51 @@ class DouguoSpiderSpider(scrapy.Spider):
         item['step'] = step
 
         # 爬取菜的评论数量和作者
-        pass
+        authorID = response.xpath(
+            ".//div[@id='comment_container']/div[@class='coping ptb2010 clearfix libdm']/div[@class='coimg mrm']/a/@href")
 
         yield item
 
-    def authorParse(self, response):
+    def parseComments(self, authorID, response):
+        for value in response.xpath(
+                ".//div[@id='comment_container']/div[@class='coping ptb2010 clearfix libdm']/div[@class='coimg mrm']/a/@href"):
+            value = value.strip()
+            value = value.split('/')[2][0:-5]
+            authorID.append(value)
+
+
+        return authorID
+
+    def authorMainParse(self, response):
         item = DouguoAuthorItem()
-        item['authorUrl'] = response.meta['url']
+        item['authorUrl'] = response.meta['url'].split('/')[4][0:-5]
         item['authorName'] = response.meta['author']
         item['authorLocation'] = response.xpath(".//div[@class='clearfix']/span[@class='fcc']/text()").extract()[0]
+
+        yield scrapy.Request(response.meta['urlCollection'],
+                             meta={'item': item, 'urlCollection': response.meta['urlCollection']},
+                             callback=self.authorIfCollectionParse)
+
+    def authorIfCollectionParse(self, response):
+        item = response.meta['item']
+
         item['authorCollectionNumber'] = \
             (response.xpath(".//div[@id='main']//li[1]/a/span/text()").extract()[0]).strip().split('（')[1][0:-1]
 
         # 爬取用户的收藏列表
-        if item['authorCollectionnumber'] == 0:
+        if item['authorCollectionNumber'] == "0":
             item['authorCollection'] = '无'
+            yield item
         else:
             collections = ""
+            # 为什么这条会被过滤
             yield scrapy.Request(response.meta['urlCollection'], meta={'item': item, 'collections': collections},
-                                 callback=self.authorCollectionParse)
+                                 callback=self.authorCollectionParse, dont_filter=True)
 
     def authorCollectionParse(self, response):
         collections = response.meta['collections']
         item = response.meta['item']
+
         for node in response.xpath(".//div[@id='main']//div[@class='faveone']"):
             # 菜名
             collection = node.xpath("./h3/a/text()").extract()[0]
@@ -152,12 +174,12 @@ class DouguoSpiderSpider(scrapy.Spider):
             collection += "**" + node.xpath("./p[2]/text()").extract()[0].strip()[3:] + "&&"
             # 合并
             collections += collection
+            # flag = 0
         for node in response.xpath(".//div[@class='pagination mt30 mb30']//span[@class='floblock']"):
             if node.xpath("./a/text()").extract()[0].strip() == "下一页":
                 return scrapy.Request(node.xpath("./a/@href").extract()[0].strip(),
                                       meta={'item': item, 'collections': collections},
-                                      callback=self.authorCollectionParse)
+                                      callback=self.authorCollectionParse, dont_filter=True)
 
-        item['collections'] = collections
+        item['authorCollection'] = collections
         yield item
-        print("用户：" + item['author'] + "的收藏信息已爬取完毕")

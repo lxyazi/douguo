@@ -1,0 +1,16 @@
+2018-04-20 17:18:55 [scrapy.core.scraper] ERROR: Spider error processing <GET http://www.douguo.com/cookbook/1231794.html> (referer: http://www.douguo.com/caipu/%
+E4%B8%9C%E5%8C%97%E8%8F%9C/600)
+Traceback (most recent call last):
+  File "c:\python36\lib\site-packages\scrapy\utils\defer.py", line 102, in iter_errback
+    yield next(it)
+  File "c:\python36\lib\site-packages\scrapy\spidermiddlewares\offsite.py", line 30, in process_spider_output
+    for x in result:
+  File "c:\python36\lib\site-packages\scrapy\spidermiddlewares\referer.py", line 339, in <genexpr>
+    return (_set_referer(r) for r in result or ())
+  File "c:\python36\lib\site-packages\scrapy\spidermiddlewares\urllength.py", line 37, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "c:\python36\lib\site-packages\scrapy\spidermiddlewares\depth.py", line 58, in <genexpr>
+    return (r for r in result or () if _filter(r))
+  File "D:\workspace\python\douguo\douguo\spiders\douguo_spider.py", line 105, in itemParse
+    timeAssume = response.xpath(".//table//tr[1]/td[2]/text()").extract()[0].strip()
+IndexError: list index out of range

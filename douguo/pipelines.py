@@ -8,9 +8,16 @@ import json
 from douguo.items import DouguoTypeItem
 from douguo.items import DouguoItem
 from douguo.items import DouguoAuthorItem
+import os
 
 class DouguoPipeline(object):
     def __init__(self):
+        if os.path.exists("fileType.json"):
+            os.remove("fileType.json")
+        if os.path.exists("fileType.json"):
+            os.remove("fileAuthor.json")
+        if os.path.exists("fileType.json"):
+            os.remove("fileItem.json")
         self.fileType = open("fileType.json", "w")
         self.fileItem = open("fileItem.json", "w")
         self.fileAuthor = open("fileAuthor.json", "w")

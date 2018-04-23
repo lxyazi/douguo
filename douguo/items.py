@@ -35,7 +35,7 @@ class DouguoItem(scrapy.Item):
     author = scrapy.Field()
     # # 评论数量
     # numOfComments = scrapy.Field()
-    # # 评论作者s
+    # # 评论作者列表
     # authorOfComments = scrapy.Field()
 
 

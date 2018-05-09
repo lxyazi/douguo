@@ -14226,3 +14226,61 @@ UnicodeEncodeError: 'gbk' codec can't encode character '\u2093' in position 48: 
 2018-04-23 16:40:15 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://www.douguo.com/cookbook/89713.html> (referer: http://www.douguo.com/caipu/%E6%B9%98%E8%8F%9C/600)
 2018-04-23 16:40:15 [scrapy.core.downloader.handlers.http11] WARNING: Got data loss in http://www.douguo.com/cookbook/229364.html. If you want to process broken responses set the setting DOWNLOAD_FAIL_ON_DATALOSS = False -- This message won't be shown in further requests
 2018-04-23 16:40:15 [scrapy.downloadermiddlewares.retry] DEBUG: Retrying <GET http://www.douguo.com/cookbook/229364.html> (failed 1 times): [<twisted.python.failure.Failure twisted.internet.error.ConnectionLost: Connection to the other side was lost in a non-clean fashion: Connection lost.>, <twisted.python.failure.Failure twisted.web.http._DataLoss: Chunked decoder in 'BODY' state, still expecting more data to get to 'FINISHED' state.>]
+2018-05-07 23:22:58 [scrapy.utils.log] INFO: Scrapy 1.5.0 started (bot: douguo)
+2018-05-07 23:22:58 [scrapy.utils.log] INFO: Versions: lxml 4.2.1.0, libxml2 2.9.5, cssselect 1.0.3, parsel 1.4.0, w3lib 1.19.0, Twisted 17.9.0, Python 3.6.4 (v3.6.4:d48eceb, Dec 19 2017, 06:54:40) [MSC v.1900 64 bit (AMD64)], pyOpenSSL 17.5.0 (OpenSSL 1.1.0g  2 Nov 2017), cryptography 2.2.1, Platform Windows-10-10.0.16299-SP0
+2018-05-07 23:22:58 [scrapy.crawler] INFO: Overridden settings: {'BOT_NAME': 'douguo', 'DUPEFILTER_CLASS': 'scrapy.dupefilters.BaseDupeFilter', 'LOGSTATS_INTERVAL': 0, 'LOG_FILE': 'log.txt', 'NEWSPIDER_MODULE': 'douguo.spiders', 'SPIDER_MODULES': ['douguo.spiders']}
+2018-05-07 23:22:59 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole']
+2018-05-07 23:23:00 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2018-05-07 23:23:00 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2018-05-07 23:23:00 [scrapy.middleware] INFO: Enabled item pipelines:
+['douguo.pipelines.DouguoPipeline']
+2018-05-07 23:23:00 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6023
+2018-05-07 23:23:00 [scrapy.core.engine] INFO: Spider opened
+2018-05-07 23:23:01 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://www.douguo.com/ajax/getCommentsList/caipu/1405923/2> (referer: None)
+2018-05-07 23:38:25 [scrapy.utils.log] INFO: Scrapy 1.5.0 started (bot: douguo)
+2018-05-07 23:38:25 [scrapy.utils.log] INFO: Versions: lxml 4.2.1.0, libxml2 2.9.5, cssselect 1.0.3, parsel 1.4.0, w3lib 1.19.0, Twisted 17.9.0, Python 3.6.4 (v3.6.4:d48eceb, Dec 19 2017, 06:54:40) [MSC v.1900 64 bit (AMD64)], pyOpenSSL 17.5.0 (OpenSSL 1.1.0g  2 Nov 2017), cryptography 2.2.1, Platform Windows-10-10.0.16299-SP0
+2018-05-07 23:38:25 [scrapy.crawler] INFO: Overridden settings: {'BOT_NAME': 'douguo', 'DUPEFILTER_CLASS': 'scrapy.dupefilters.BaseDupeFilter', 'LOGSTATS_INTERVAL': 0, 'LOG_FILE': 'log.txt', 'NEWSPIDER_MODULE': 'douguo.spiders', 'SPIDER_MODULES': ['douguo.spiders']}
+2018-05-07 23:38:25 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole']
+2018-05-07 23:38:25 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2018-05-07 23:38:25 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2018-05-07 23:38:25 [scrapy.middleware] INFO: Enabled item pipelines:
+['douguo.pipelines.DouguoPipeline']
+2018-05-07 23:38:25 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6023
+2018-05-07 23:38:25 [scrapy.core.engine] INFO: Spider opened
+2018-05-07 23:38:25 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://www.douguo.com/ajax/getCommentsList/caipu/1671892/1> (referer: None)

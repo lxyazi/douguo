@@ -157,7 +157,6 @@ class DouguoSpiderSpider(scrapy.Spider):
             yield item
         else:
             collections = ""
-            # 为什么这条会被过滤
             yield scrapy.Request(response.meta['urlCollection'], meta={'item': item, 'collections': collections},
                                  callback=self.authorCollectionParse, dont_filter=True)
 

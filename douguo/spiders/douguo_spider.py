@@ -128,7 +128,7 @@ class DouguoSpiderSpider(scrapy.Spider):
         yield scrapy.Request(commentsUrl, meta={'item': item, 'comments': comments}, callback=self.commentsParse,
                              dont_filter=True)
 
-    def commentsParse(self, authorID, response):
+    def commentsParse(self, response):
         item = response.meta['item']
         datas = json.loads(response.body)
         comments = response.meta['comments']

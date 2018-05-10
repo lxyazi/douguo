@@ -33,10 +33,10 @@ class DouguoItem(scrapy.Item):
     timeAssume = scrapy.Field()
     # 用户名称 1
     author = scrapy.Field()
-    # # 评论数量
-    # numOfComments = scrapy.Field()
-    # # 评论作者列表
-    # authorOfComments = scrapy.Field()
+    # 评论数量
+    numOfComments = scrapy.Field()
+    # 评论作者列表
+    authorOfComments = scrapy.Field()
 
 
 

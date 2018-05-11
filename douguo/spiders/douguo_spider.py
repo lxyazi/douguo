@@ -121,7 +121,7 @@ class DouguoSpiderSpider(scrapy.Spider):
         item['step'] = step
 
         # 处理菜的评论信息用的url，为接下来做准备
-        commentsUrl = "http://www.douguo.com/ajax/getCommentsList/caipu/" + item['href'] + "/1"
+        commentsUrl = "http://www.douguo.com/ajax/getCommentsList/caipu/" + item['href'] + "/0"
         comments = ""
 
         # 前往commentsParse爬取菜的评论信息并yield回item

@@ -124,11 +124,17 @@ class DouguoSpiderSpider(scrapy.Spider):
         commentsUrl = "http://www.douguo.com/ajax/getCommentsList/caipu/" + item['href'] + "/0"
         comments = ""
 
-        # 前往commentsParse爬取菜的评论信息并yield回item
-        yield scrapy.Request(commentsUrl, meta={'item': item, 'comments': comments}, callback=self.commentsParse,
-                             dont_filter=True)
+        # 前往commentsWithDetailParse爬取菜的评论信息并yield回item
+        # 此处爬取具体评论信息
+        yield scrapy.Request(commentsUrl, meta={'item': item, 'comments': comments},
+                             callback=self.commentsWithDetailParse, dont_filter=True)
 
-    def commentsParse(self, response):
+        # 此处仅爬取评论人
+        # userPool = set([])
+        # yield scrapy.Request(commentsUrl, meta={'item': item, 'userPool': userPool},
+        #                      callback=self.commentsWithoutDetailParse, dont_filter=True)
+
+    def commentsWithDetailParse(self, response):
         item = response.meta['item']
         datas = json.loads(response.body)
         comments = response.meta['comments']
@@ -148,12 +154,43 @@ class DouguoSpiderSpider(scrapy.Spider):
             return item
         else:
             for user in datas['data']['lists']:
-                comments += ( '$' + user['username'] + '&:' + user['comment'])
+                comments += ('$' + user['username'] + '&:' + user['comment'])
             currentUrl = response.url
             num = currentUrl[-1]
             nextUrl = currentUrl[0:-1] + str(int(num) + 1)
-            return scrapy.Request(nextUrl, meta={'item': item, 'comments': comments}, callback=self.commentsParse,
-                             dont_filter=True)
+            return scrapy.Request(nextUrl, meta={'item': item, 'comments': comments},
+                                  callback=self.commentsWithDetailParse, dont_filter=True)
+
+    # TODO
+    def commentsWithoutDetailParse(self, response):
+        item = response.meta['item']
+        datas = json.loads(response.body)
+        userPool = response.meta['userPool']
+
+        # 第一次爬取时，判断当前菜的评论数量，并填充numOfComments值
+        if len(response.meta['comments']) == 0:
+            item['numOfComments'] = datas['data']['total']
+
+            # 如果菜没有评论，则在此处返回item
+            if item['numOfComments'] == 0:
+                item['authorOfComments'] = "无"
+                return item
+
+        # 非第一次爬取时，判断当前页面是否为空评论，是则退出并返回item
+        if len(datas['data']['lists']) == 0:
+            comments = ""
+            for value in userPool:
+                comments += ('$' + value)
+            item['authorOfComments'] = comments
+            return item
+        else:
+            for user in datas['data']['lists']:
+                userPool.add(user['username'])
+            currentUrl = response.url
+            num = currentUrl[-1]
+            nextUrl = currentUrl[0:-1] + str(int(num) + 1)
+            return scrapy.Request(nextUrl, meta={'item': item}, callback=self.commentsWithoutDetailParse,
+                                  dont_filter=True)
 
     def authorMainParse(self, response):
         item = DouguoAuthorItem()

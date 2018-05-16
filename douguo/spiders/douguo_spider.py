@@ -38,11 +38,11 @@ class DouguoSpiderSpider(scrapy.Spider):
     def itemParse(self, response):
         item = DouguoItem()
         item['typeTitle'] = response.meta['catesList']
-        item['title'] = response.xpath(".//div[@class='recinfo']//h1/text()").extract()[0].strip()
+        item['title'] = response.xpath(".//div[@class='recinfo']//h1/text()").extract()[0].strip().replace(',', '，')
 
         # 菜的描述
         if len(response.xpath(".//div[@class='xtip']")) != 0:
-            item['description'] = response.xpath(".//div[@class='xtip']/text()").extract()[0].strip()
+            item['description'] = response.xpath(".//div[@class='xtip']/text()").extract()[0].strip().replace(',', '，')
         else:
             item['description'] = "无"
 
@@ -60,7 +60,7 @@ class DouguoSpiderSpider(scrapy.Spider):
 
         # 小贴士
         if len(response.xpath(".//div[@class='xtieshi']/p")) != 0:
-            item['tip'] = response.xpath(".//div[@class='xtieshi']/p/text()").extract()[0].strip()
+            item['tip'] = response.xpath(".//div[@class='xtieshi']/p/text()").extract()[0].strip().replace(',', '，')
         else:
             item['tip'] = "无"
 
@@ -69,7 +69,7 @@ class DouguoSpiderSpider(scrapy.Spider):
         item['href'] = response.meta['url'].split('/')[4][0:-5]
 
         # 用户站内ID的爬取
-        item['author'] = response.xpath(".//div[@class='auth']/h4/a/text()").extract()[0].strip()
+        item['author'] = response.xpath(".//div[@class='auth']/h4/a/text()").extract()[0].strip().replace(',', '，')
 
         # 用户主页的爬取及收藏页面的跳转
         authorUrl = response.xpath(".//div[@class='auth']/h4/a/@href").extract()[0].strip()
@@ -83,17 +83,17 @@ class DouguoSpiderSpider(scrapy.Spider):
         for pair in response.xpath(".//table//tr[not(@class='mtim')]/td"):
             if len(pair.xpath("./span")) != 0:
                 if len(pair.xpath("./span[1]/a")) != 0:
-                    ing1 = pair.xpath("./span[1]/a/text()").extract()[0].strip()
+                    ing1 = pair.xpath("./span[1]/a/text()").extract()[0].strip().replace(',', '，')
                 else:
-                    ing1 = pair.xpath("./span[1]/label/text()").extract()[0].strip()
+                    ing1 = pair.xpath("./span[1]/label/text()").extract()[0].strip().replace(',', '，')
 
                 if len(pair.xpath("./span[2]/text()").extract()) != 0:
-                    ing2 = pair.xpath("./span[2]/text()").extract()[0].strip()
+                    ing2 = pair.xpath("./span[2]/text()").extract()[0].strip().replace(',', '，')
                 else:
                     ing2 = 'null'
                 recipeIngredient += str(ing1) + "&:" + str(ing2) + "$"
 
-        item['recipeIngredient'] = recipeIngredient
+        item['recipeIngredient'] = recipeIngredient.replace(',', '，')
 
         # ------------------爬取难易程度和时间消耗这两个信息------------------------------------
 
@@ -119,7 +119,7 @@ class DouguoSpiderSpider(scrapy.Spider):
         step = "*"
         for value in steps:
             step += value + "*"
-        item['step'] = step
+        item['step'] = step.replace(',', '，')
 
         # 处理菜的评论信息用的url，为接下来做准备
         commentsUrl = "http://www.douguo.com/ajax/getCommentsList/caipu/" + item['href'] + "/0"
@@ -155,7 +155,7 @@ class DouguoSpiderSpider(scrapy.Spider):
             return item
         else:
             for user in datas['data']['lists']:
-                comments += ('$' + user['username'] + '&:' + user['comment'])
+                comments += ('$' + user['username'] + '&:' + user['comment']).replace(',', '，')
             currentUrl = response.url
             num = currentUrl[-1]
             nextUrl = currentUrl[0:-1] + str(int(num) + 1)

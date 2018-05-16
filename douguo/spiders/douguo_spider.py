@@ -4,6 +4,7 @@ from douguo.items import DouguoTypeItem
 from douguo.items import DouguoItem
 from douguo.items import DouguoAuthorItem
 import json
+from time import sleep
 
 
 class DouguoSpiderSpider(scrapy.Spider):
@@ -233,9 +234,11 @@ class DouguoSpiderSpider(scrapy.Spider):
             # flag = 0
         for node in response.xpath(".//div[@class='pagination mt30 mb30']//span[@class='floblock']"):
             if node.xpath("./a/text()").extract()[0].strip() == "下一页":
-                return scrapy.Request(node.xpath("./a/@href").extract()[0].strip(),
+                # yield后return
+                yield scrapy.Request(node.xpath("./a/@href").extract()[0].strip(),
                                       meta={'item': item, 'collections': collections},
                                       callback=self.authorCollectionParse, dont_filter=True)
+                return
 
         item['authorCollection'] = collections
         yield item

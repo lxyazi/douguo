@@ -83,9 +83,11 @@ class DouguoSpiderSpider(scrapy.Spider):
         for pair in response.xpath(".//table//tr[not(@class='mtim')]/td"):
             if len(pair.xpath("./span")) != 0:
                 if len(pair.xpath("./span[1]/a")) != 0:
-                    ing1 = pair.xpath("./span[1]/a/text()").extract()[0].strip().replace(',', '，')
+                    if len(pair.xpath("./span[1]/a/text()").extract()) != 0:
+                        ing1 = pair.xpath("./span[1]/a/text()").extract()[0].strip().replace(',', '，')
                 else:
-                    ing1 = pair.xpath("./span[1]/label/text()").extract()[0].strip().replace(',', '，')
+                    if len(pair.xpath("./span[1]/label/text()").extract()) != 0:
+                        ing1 = pair.xpath("./span[1]/label/text()").extract()[0].strip().replace(',', '，')
 
                 if len(pair.xpath("./span[2]/text()").extract()) != 0:
                     ing2 = pair.xpath("./span[2]/text()").extract()[0].strip().replace(',', '，')
@@ -99,17 +101,26 @@ class DouguoSpiderSpider(scrapy.Spider):
 
         difficulty = "无"
         timeAssume = "无"
-        diffAndTime = response.xpath(".//table//tr[1]/td/span/text()").extract()
-        for value in diffAndTime:
-            if value == '难度：':
-                difficulty = response.xpath(".//table//tr[1]/td[1]/text()").extract()[0].strip()
-            if value == '时间：':
-                timeAssume = response.xpath(".//table//tr[1]/td[2]/text()").extract()[0].strip()
-        if len(response.xpath(".//table//tr[1]/td/span")) == 2:
-            difficulty = \
-                response.xpath(".//table//tr[@class='mtim']/td/text()").extract()[0].strip()
-            timeAssume = \
-                response.xpath(".//table//tr[@class='mtim']/td/text()").extract()[2].strip()
+
+        # diffAndTime = response.xpath(".//table//tr[1]/td/span/text()").extract()
+        # for value in diffAndTime:
+        #     if value == '难度：':
+        #         difficulty = response.xpath(".//table//tr[1]/td[1]/text()").extract()[0].strip()
+        #     if value == '时间：':
+        #         timeAssume = response.xpath(".//table//tr[1]/td[2]/text()").extract()[0].strip()
+
+        for node in response.xpath(".//table//tr[1]/td"):
+            if len(node.xpath("./span")) != 0:
+                if node.xpath("./span/text()").extract()[0] == "难度：":
+                    difficulty = node.xpath("./text()").extract()[0].strip()
+                if node.xpath("./span/text()").extract()[0] == "时间：":
+                    timeAssume = node.xpath("./text()").extract()[0].strip()
+
+        # if len(response.xpath(".//table//tr[1]/td/span")) == 2:
+        #     difficulty = \
+        #         response.xpath(".//table//tr[@class='mtim']/td/text()").extract()[0].strip()
+        #     timeAssume = \
+        #         response.xpath(".//table//tr[@class='mtim']/td/text()").extract()[2].strip()
         item['difficulty'] = difficulty
         item['timeAssume'] = timeAssume
 
@@ -151,11 +162,14 @@ class DouguoSpiderSpider(scrapy.Spider):
 
         # 非第一次爬取时，判断当前页面是否为空评论，是则退出并返回item
         if len(datas['data']['lists']) == 0:
-            item['authorOfComments'] = response.meta['comments']
+            item['authorOfComments'] = response.meta['comments'].replace(',', '，')
             return item
         else:
             for user in datas['data']['lists']:
-                comments += ('$' + user['username'] + '&:' + user['comment']).replace(',', '，')
+                if user['username'] is not None:
+                    comments += ('$' + user['username'] + '&:' + user['comment'])
+                else:
+                    comments += ('$' + "游客" + '&:' + user['comment'])
             currentUrl = response.url
             num = currentUrl[-1]
             nextUrl = currentUrl[0:-1] + str(int(num) + 1)

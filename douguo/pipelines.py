@@ -22,9 +22,9 @@ class DouguoPipeline(object):
             os.remove("fileAuthor.csv")
         if os.path.exists("fileType.csv"):
             os.remove("fileItem.csv")
-        self.fileType = open("fileType.csv", "w", newline='')
-        self.fileItem = open("fileItem.csv", "w", newline='')
-        self.fileAuthor = open("fileAuthor.csv", "w", newline='')
+        self.fileType = open("fileType.csv", "w", newline='', encoding='utf-8')
+        self.fileItem = open("fileItem.csv", "w", newline='', encoding='utf-8')
+        self.fileAuthor = open("fileAuthor.csv", "w", newline='', encoding='utf-8')
         typeFieldNames = ['catesListInfo', 'catesList', 'catesListHref']
         itemFieldNames = ['peopleNumber', 'collectionNumber', 'description', 'recipeIngredient', 'step', 'tip', 'href',
                           'title', 'typeTitle', 'difficulty', 'timeAssume', 'author', 'numOfComments',
@@ -50,11 +50,6 @@ class DouguoPipeline(object):
 
         return item
 
-    def valueProcess(self, stirng):
-        str = stirng.replace('，', '').replace('*', '').replace('。', '')
-        regex = '（.*?）'
-        result, number = re.subn(regex, '', str)
-        return result
 
 # class DouguoPipeline(object):
 #     def __init__(self):

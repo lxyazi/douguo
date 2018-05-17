@@ -69,7 +69,10 @@ class DouguoSpiderSpider(scrapy.Spider):
         item['href'] = response.meta['url'].split('/')[4][0:-5]
 
         # 用户站内ID的爬取
-        item['author'] = response.xpath(".//div[@class='auth']/h4/a/text()").extract()[0].strip().replace(',', '，')
+        if len(response.xpath(".//div[@class='auth']/h4/a/text()").extract()) != 0:
+            item['author'] = response.xpath(".//div[@class='auth']/h4/a/text()").extract()[0].strip().replace(',', '，')
+        else:
+            item['author'] = "空白"
 
         # 用户主页的爬取及收藏页面的跳转
         authorUrl = response.xpath(".//div[@class='auth']/h4/a/@href").extract()[0].strip()
@@ -165,6 +168,7 @@ class DouguoSpiderSpider(scrapy.Spider):
             item['authorOfComments'] = response.meta['comments'].replace(',', '，')
             return item
         else:
+            # 此处可使用三元操作符进行简化
             for user in datas['data']['lists']:
                 if user['username'] is not None:
                     comments += ('$' + user['username'] + '&:' + user['comment'])

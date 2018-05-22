@@ -59,7 +59,8 @@ class DouguoSpiderSpider(scrapy.Spider):
             item['collectionNumber'] = "-1"
 
         # 小贴士
-        if len(response.xpath(".//div[@class='xtieshi']/p")) != 0:
+        if len(response.xpath(".//div[@class='xtieshi']/p")) != 0 and \
+                len(response.xpath(".//div[@class='xtieshi']/p/text()").extract()) != 0:
             item['tip'] = response.xpath(".//div[@class='xtieshi']/p/text()").extract()[0].strip().replace(',', '，')
         else:
             item['tip'] = "无"
@@ -85,6 +86,8 @@ class DouguoSpiderSpider(scrapy.Spider):
         recipeIngredient = ""
         for pair in response.xpath(".//table//tr[not(@class='mtim')]/td"):
             if len(pair.xpath("./span")) != 0:
+                ing1 = "无"
+                ing2 = "无"
                 if len(pair.xpath("./span[1]/a")) != 0:
                     if len(pair.xpath("./span[1]/a/text()").extract()) != 0:
                         ing1 = pair.xpath("./span[1]/a/text()").extract()[0].strip().replace(',', '，')
@@ -96,6 +99,9 @@ class DouguoSpiderSpider(scrapy.Spider):
                     ing2 = pair.xpath("./span[2]/text()").extract()[0].strip().replace(',', '，')
                 else:
                     ing2 = 'null'
+
+                if ing1 == "无":
+                    break
                 recipeIngredient += str(ing1) + "&:" + str(ing2) + "$"
 
         item['recipeIngredient'] = recipeIngredient.replace(',', '，')

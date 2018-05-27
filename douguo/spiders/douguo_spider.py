@@ -77,6 +77,7 @@ class DouguoSpiderSpider(scrapy.Spider):
 
         # 用户主页的爬取及收藏页面的跳转
         authorUrl = response.xpath(".//div[@class='auth']/h4/a/@href").extract()[0].strip()
+        item['authorID'] = authorUrl.split('/')[4][0:-5]
         authorUrlCollection = authorUrl.replace(".html", "/collect")
         yield scrapy.Request(authorUrl,
                              meta={'url': authorUrl, 'author': item['author'], 'urlCollection': authorUrlCollection},
@@ -105,6 +106,7 @@ class DouguoSpiderSpider(scrapy.Spider):
                 recipeIngredient += str(ing1) + "&:" + str(ing2) + "$"
 
         item['recipeIngredient'] = recipeIngredient.replace(',', '，')
+
 
         # ------------------爬取难易程度和时间消耗这两个信息------------------------------------
 

@@ -37,7 +37,8 @@ class DouguoItem(scrapy.Item):
     numOfComments = scrapy.Field()
     # 评论作者列表
     authorOfComments = scrapy.Field()
-
+    # 作者唯一标识
+    authorID = scrapy.Field()
 
 
 class DouguoTypeItem(scrapy.Item):

@@ -28,7 +28,7 @@ class DouguoPipeline(object):
         typeFieldNames = ['catesListInfo', 'catesList', 'catesListHref']
         itemFieldNames = ['peopleNumber', 'collectionNumber', 'description', 'recipeIngredient', 'step', 'tip', 'href',
                           'title', 'typeTitle', 'difficulty', 'timeAssume', 'author', 'numOfComments',
-                          'authorOfComments']
+                          'authorOfComments', 'authorID']
         authorFieldNames = ['authorName', 'authorUrl', 'authorLocation', 'authorCollectionNumber', 'authorCollection']
         self.typeWriter = csv.DictWriter(self.fileType, fieldnames=typeFieldNames)
         self.itemWriter = csv.DictWriter(self.fileItem, fieldnames=itemFieldNames)
